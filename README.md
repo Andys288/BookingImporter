@@ -9,6 +9,7 @@ This POC solution enables project managers to import resource booking data from 
 - Node.js (v14 or higher)
 - SQL Server database access
 - Excel file with booking data
+- SQL Server stored procedure `TSSP_INSERT_UPDATE_DELETE_TS_BOOKINGS` installed (see `database/` folder)
 
 ### Installation & Setup
 
@@ -172,6 +173,9 @@ All errors are logged with:
 
 ```
 my-react-app/
+├── database/
+│   ├── README.md              # Database documentation
+│   └── TSSP_INSERT_UPDATE_DELETE_TS_BOOKINGS.sql # Stored procedure
 ├── server/
 │   ├── server.js              # Express server setup
 │   ├── config/
