@@ -21,7 +21,7 @@ async function uploadBookings(req, res) {
     const fileBuffer = await fs.readFile(filePath);
 
     // Parse Excel file
-    const { data, totalRows, sheetName } = parseExcelFile(fileBuffer);
+    const { data, totalRows, sheetName } = await parseExcelFile(fileBuffer);
 
     if (totalRows === 0) {
       return res.status(400).json({
@@ -31,7 +31,7 @@ async function uploadBookings(req, res) {
     }
 
     // Get headers for validation
-    const headers = getExcelHeaders(fileBuffer);
+    const headers = await getExcelHeaders(fileBuffer);
     
     // Define required columns (customize based on your needs)
     const requiredColumns = ['ResourceName', 'ProjectCode', 'StartDate', 'EndDate', 'Hours'];
@@ -106,8 +106,8 @@ async function previewFile(req, res) {
     const fileBuffer = await fs.readFile(filePath);
 
     // Parse Excel file
-    const { data, totalRows, sheetName } = parseExcelFile(fileBuffer);
-    const headers = getExcelHeaders(fileBuffer);
+    const { data, totalRows, sheetName } = await parseExcelFile(fileBuffer);
+    const headers = await getExcelHeaders(fileBuffer);
 
     // Get first 10 rows for preview
     const preview = data.slice(0, 10);
