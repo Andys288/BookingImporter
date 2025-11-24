@@ -26,8 +26,17 @@ if (useWindowsAuth) {
   const connectionString = `Server=${serverName},${port};Database=${process.env.DB_DATABASE};Trusted_Connection=Yes;Driver={${driver}};TrustServerCertificate=yes;`;
   
   config = {
+    // CRITICAL: mssql@12.x requires server property even with connectionString
+    server: serverName,
+    database: process.env.DB_DATABASE,
     driver: 'msnodesqlv8',
     connectionString: connectionString,
+    options: {
+      trustedConnection: true,
+      enableArithAbort: true,
+      trustServerCertificate: true,
+      instanceName: '' // Prevents instance name lookup issues
+    },
     pool: {
       max: 10,
       min: 0,
