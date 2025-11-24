@@ -187,10 +187,10 @@ async function downloadTemplate(req, res) {
     let filename;
     
     if (templateType === 'complete') {
-      templatePath = path.join(__dirname, '../../public/Booking_Template_Complete.xlsx');
+      templatePath = path.join(__dirname, '../../public/templates/Booking_Template_Complete.xlsx');
       filename = 'Booking_Template_Complete.xlsx';
     } else {
-      templatePath = path.join(__dirname, '../../public/Booking_Template_Minimum.xlsx');
+      templatePath = path.join(__dirname, '../../public/templates/Booking_Template_Minimum.xlsx');
       filename = 'Booking_Template_Minimum.xlsx';
     }
     

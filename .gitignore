@@ -35,3 +35,6 @@ uploads/*
 # Database
 *.db
 *.sqlite
+
+# Archive - Legacy POC version (keep in git for history)
+# my-react-app/ is archived but tracked for reference

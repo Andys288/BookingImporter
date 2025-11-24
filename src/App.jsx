@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import './App.css'
-import FileUpload from './components/FileUpload'
-import ResultsDisplay from './components/ResultsDisplay'
-import ConnectionTest from './components/ConnectionTest'
+import FileUpload from './components/FileUpload/FileUpload'
+import ResultsDisplay from './components/ResultsDisplay/ResultsDisplay'
+import ConnectionTest from './components/ConnectionTest/ConnectionTest'
 
 function App() {
   const [results, setResults] = useState(null)
