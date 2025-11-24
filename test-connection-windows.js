@@ -67,8 +67,9 @@ async function testConnection() {
     console.log('🔌 Attempting to connect...');
     console.log('');
     
-    // Attempt connection
-    pool = await sql.connect(config);
+    // Attempt connection - create new pool for msnodesqlv8
+    pool = new sql.ConnectionPool(config);
+    await pool.connect();
     
     console.log('✅ Connection successful!');
     console.log('');
