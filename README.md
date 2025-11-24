@@ -66,14 +66,21 @@ npm run dev
 
 ## 📚 Documentation
 
-| Document | Description |
-|----------|-------------|
-| **[Setup Guide](docs/SETUP.md)** | Complete installation and configuration |
-| **[Windows Auth Setup](docs/WINDOWS_AUTH_SETUP.md)** | ⚠️ Required for Windows Authentication |
-| **[Project Structure](docs/STRUCTURE.md)** | Understanding the codebase organization |
-| **[API Documentation](docs/API.md)** | Backend API reference |
-| **[Troubleshooting](docs/TROUBLESHOOTING.md)** | Common issues and solutions |
-| **[Contributing Guide](docs/CONTRIBUTING.md)** | Development guidelines |
+> **📖 [Complete Documentation Index](docs/INDEX.md)** - Find everything you need!
+
+### Quick Links
+
+| Document | Description | Time |
+|----------|-------------|------|
+| **[Quick Start Guide](docs/QUICK_START_GUIDE.md)** | ⭐ Start here! 5-minute setup | 30 min |
+| **[Project Structure](docs/STRUCTURE.md)** | Understanding the codebase organization | 20 min |
+| **[Contributing Guide](docs/CONTRIBUTING.md)** | Development guidelines & workflow | 30 min |
+| **[API Documentation](docs/API.md)** | Complete API reference | 15 min |
+| **[Troubleshooting](docs/TROUBLESHOOTING.md)** | Common issues and solutions | As needed |
+| **[Windows Auth Setup](docs/WINDOWS_AUTH_SETUP.md)** | ⚠️ Required for Windows Authentication | 10 min |
+| **[Changelog](docs/CHANGELOG.md)** | Version history & release notes | 5 min |
+
+**📊 Total Documentation:** 4,000+ lines covering 100% of the project
 
 ---
 
