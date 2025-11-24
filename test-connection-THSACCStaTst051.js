@@ -4,20 +4,25 @@
  * This script tests the database connection to your SQL Server
  * Server: THSACCStaTst051
  * Database: Accounts
- * Authentication: Windows Authentication
+ * Authentication: Windows Authentication using msnodesqlv8
  */
 
-const sql = require('mssql');
+const sql = require('mssql/msnodesqlv8');
 
-// Configuration for THSACCStaTst051
-// mssql@12.x requires both server property AND connectionString when using ODBC
+// Configuration for THSACCStaTst051 with Windows Authentication
 const config = {
-  server: 'THSACCStaTst051',  // Required by mssql@12.x even with connectionString
-  connectionString: 'Driver={ODBC Driver 18 for SQL Server};Server=THSACCStaTst051;Database=Accounts;Trusted_Connection=Yes;TrustServerCertificate=yes;',
+  server: 'THSACCStaTst051',
+  database: 'Accounts',
+  driver: 'msnodesqlv8',
   options: {
     trustedConnection: true,
-    enableArithAbort: true,
-    trustServerCertificate: true
+    trustServerCertificate: true,
+    enableArithAbort: true
+  },
+  pool: {
+    max: 10,
+    min: 0,
+    idleTimeoutMillis: 30000
   }
 };
 
@@ -29,7 +34,7 @@ async function testConnection() {
   console.log('📋 Connection Details:');
   console.log('   Server:         THSACCStaTst051');
   console.log('   Database:       Accounts');
-  console.log('   Driver:         ODBC Driver 18 for SQL Server');
+  console.log('   Driver:         msnodesqlv8 (Windows Native)');
   console.log('   Authentication: Windows Authentication (Trusted_Connection)');
   console.log('   Windows User:   ' + (process.env.USERNAME || process.env.USER || 'Unknown'));
   console.log('   Domain:         ' + (process.env.USERDOMAIN || 'Unknown'));
@@ -138,9 +143,14 @@ async function testConnection() {
     console.log('🎉 Your connection to THSACCStaTst051 is working perfectly!');
     console.log('');
     console.log('Next steps:');
-    console.log('   1. Start your backend server: npm run server');
-    console.log('   2. Start your frontend: npm run dev');
-    console.log('   3. Open http://localhost:5173 in your browser');
+    console.log('   1. Update your .env file with:');
+    console.log('      DB_SERVER=THSACCStaTst051');
+    console.log('      DB_DATABASE=Accounts');
+    console.log('      USE_WINDOWS_AUTH=true');
+    console.log('');
+    console.log('   2. Start your backend server: npm run server');
+    console.log('   3. Start your frontend: npm run dev');
+    console.log('   4. Open http://localhost:5173 in your browser');
     console.log('');
     console.log('═══════════════════════════════════════════════════════════════');
 
@@ -164,23 +174,34 @@ async function testConnection() {
     console.log('───────────────────────────────────────────────────────────────');
     console.log('');
 
-    if (error.message.includes('msnodesqlv8')) {
-      console.log('❌ msnodesqlv8 driver issue detected');
+    if (error.message.includes('msnodesqlv8') || error.message.includes('Cannot find module')) {
+      console.log('❌ msnodesqlv8 driver not installed or not working');
       console.log('');
       console.log('   Solution:');
       console.log('   1. Install the driver:');
       console.log('      npm install msnodesqlv8');
       console.log('');
-      console.log('   2. Install SQL Server Native Client:');
+      console.log('   2. Install SQL Server Native Client (if not already installed):');
       console.log('      Download from: https://www.microsoft.com/en-us/download/details.aspx?id=50402');
       console.log('');
-    } else if (error.message.includes('Login failed') || error.message.includes('Cannot open database')) {
-      console.log('❌ Authentication or database access issue');
+      console.log('   3. Verify ODBC Driver 18 is installed:');
+      console.log('      Run: odbcad32.exe');
+      console.log('      Check "Drivers" tab for "ODBC Driver 18 for SQL Server"');
+      console.log('');
+    } else if (error.message.includes('Login failed') || error.code === 'ELOGIN') {
+      console.log('❌ Authentication failed - Windows user not authorized');
       console.log('');
       console.log('   Your Windows user needs access to the database.');
       console.log('');
+      console.log('   Current Windows User: ' + (process.env.USERDOMAIN || 'DOMAIN') + '\\' + (process.env.USERNAME || 'YourUsername'));
+      console.log('');
       console.log('   Ask your DBA to run this SQL:');
       console.log('   ─────────────────────────────────────────────────────');
+      console.log('   USE [master];');
+      console.log('   GO');
+      console.log('   CREATE LOGIN [' + (process.env.USERDOMAIN || 'DOMAIN') + '\\' + (process.env.USERNAME || 'YourUsername') + '] FROM WINDOWS;');
+      console.log('   GO');
+      console.log('');
       console.log('   USE [Accounts];');
       console.log('   GO');
       console.log('   CREATE USER [' + (process.env.USERDOMAIN || 'DOMAIN') + '\\' + (process.env.USERNAME || 'YourUsername') + '] FOR LOGIN [' + (process.env.USERDOMAIN || 'DOMAIN') + '\\' + (process.env.USERNAME || 'YourUsername') + '];');
@@ -190,16 +211,29 @@ async function testConnection() {
       console.log('   GO');
       console.log('   ─────────────────────────────────────────────────');
       console.log('');
-    } else if (error.message.includes('timeout') || error.message.includes('ETIMEDOUT')) {
-      console.log('❌ Connection timeout - server may be unreachable');
+      console.log('   Or test if you can connect with sqlcmd:');
+      console.log('   sqlcmd -S THSACCStaTst051 -d Accounts -E -Q "SELECT SYSTEM_USER"');
+      console.log('');
+    } else if (error.message.includes('Cannot open database')) {
+      console.log('❌ Database access denied');
+      console.log('');
+      console.log('   You can connect to SQL Server but not access the Accounts database.');
+      console.log('');
+      console.log('   Ask your DBA to grant you access to the Accounts database.');
+      console.log('');
+    } else if (error.message.includes('timeout') || error.message.includes('ETIMEDOUT') || error.message.includes('ENOTFOUND')) {
+      console.log('❌ Cannot reach server - network or server issue');
       console.log('');
       console.log('   Check:');
-      console.log('   1. Is SQL Server running?');
-      console.log('   2. Can you ping THSACCStaTst051?');
+      console.log('   1. Can you ping the server?');
       console.log('      ping THSACCStaTst051');
+      console.log('');
+      console.log('   2. Is SQL Server running?');
       console.log('');
       console.log('   3. Test with sqlcmd:');
       console.log('      sqlcmd -S THSACCStaTst051 -E -Q "SELECT @@VERSION"');
+      console.log('');
+      console.log('   4. Check firewall allows port 1433');
       console.log('');
     } else {
       console.log('❌ General connection error');
@@ -208,7 +242,7 @@ async function testConnection() {
       console.log('   1. Verify server name: THSACCStaTst051');
       console.log('   2. Check SQL Server is running');
       console.log('   3. Test with sqlcmd:');
-      console.log('      sqlcmd -S THSACCStaTst051 -E -Q "SELECT @@VERSION"');
+      console.log('      sqlcmd -S THSACCStaTst051 -d Accounts -E -Q "SELECT @@VERSION"');
       console.log('');
       console.log('   4. Check firewall allows port 1433');
       console.log('   5. Verify Windows Authentication is enabled on SQL Server');

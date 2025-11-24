@@ -1,4 +1,3 @@
-const sql = require('mssql');
 require('dotenv').config();
 
 /**
@@ -11,28 +10,21 @@ require('dotenv').config();
 // Determine which driver to use based on environment
 const useWindowsAuth = process.env.USE_WINDOWS_AUTH === 'true';
 
+// Load the appropriate driver based on authentication method
+const sql = useWindowsAuth ? require('mssql/msnodesqlv8') : require('mssql');
+
 let config;
 
 if (useWindowsAuth) {
   // Windows Authentication using msnodesqlv8 (Windows only)
-  // Extract server name without port for ODBC connection string
-  const serverName = process.env.DB_SERVER.split(':')[0];
-  const port = process.env.DB_PORT || '1433';
-  
-  // Try ODBC Driver 18 first, fallback to 17 if needed
-  const driver = process.env.ODBC_DRIVER || 'ODBC Driver 18 for SQL Server';
-  
-  // Build connection string for msnodesqlv8
-  // CRITICAL: mssql@12.x requires BOTH server property AND connectionString when using ODBC
-  const connectionString = `Driver={${driver}};Server=${serverName};Database=${process.env.DB_DATABASE};Trusted_Connection=Yes;TrustServerCertificate=yes;`;
-  
   config = {
-    server: serverName,  // Required by mssql@12.x even with connectionString
-    connectionString: connectionString,
+    server: process.env.DB_SERVER,
+    database: process.env.DB_DATABASE,
+    driver: 'msnodesqlv8',
     options: {
       trustedConnection: true,
-      enableArithAbort: true,
-      trustServerCertificate: true
+      trustServerCertificate: true,
+      enableArithAbort: true
     },
     pool: {
       max: 10,
