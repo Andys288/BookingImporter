@@ -10,21 +10,14 @@
 const sql = require('mssql');
 
 // Configuration for THSACCStaTst051
+// mssql@12.x requires both server property AND connectionString when using ODBC
 const config = {
-  server: 'THSACCStaTst051',
-  database: 'Accounts',
-  driver: 'msnodesqlv8',
-  connectionString: 'Server=THSACCStaTst051,1433;Database=Accounts;Trusted_Connection=Yes;Driver={ODBC Driver 18 for SQL Server};TrustServerCertificate=yes;',
+  server: 'THSACCStaTst051',  // Required by mssql@12.x even with connectionString
+  connectionString: 'Driver={ODBC Driver 18 for SQL Server};Server=THSACCStaTst051;Database=Accounts;Trusted_Connection=Yes;TrustServerCertificate=yes;',
   options: {
     trustedConnection: true,
     enableArithAbort: true,
-    trustServerCertificate: true,
-    instanceName: ''
-  },
-  pool: {
-    max: 10,
-    min: 0,
-    idleTimeoutMillis: 30000
+    trustServerCertificate: true
   }
 };
 
@@ -35,10 +28,8 @@ async function testConnection() {
   console.log('');
   console.log('📋 Connection Details:');
   console.log('   Server:         THSACCStaTst051');
-  console.log('   Port:           1433');
   console.log('   Database:       Accounts');
-  console.log('   Driver:         msnodesqlv8 (Windows Native ODBC)');
-  console.log('   ODBC Driver:    ODBC Driver 18 for SQL Server');
+  console.log('   Driver:         ODBC Driver 18 for SQL Server');
   console.log('   Authentication: Windows Authentication (Trusted_Connection)');
   console.log('   Windows User:   ' + (process.env.USERNAME || process.env.USER || 'Unknown'));
   console.log('   Domain:         ' + (process.env.USERDOMAIN || 'Unknown'));
@@ -197,7 +188,7 @@ async function testConnection() {
       console.log('   ALTER ROLE db_datareader ADD MEMBER [' + (process.env.USERDOMAIN || 'DOMAIN') + '\\' + (process.env.USERNAME || 'YourUsername') + '];');
       console.log('   ALTER ROLE db_datawriter ADD MEMBER [' + (process.env.USERDOMAIN || 'DOMAIN') + '\\' + (process.env.USERNAME || 'YourUsername') + '];');
       console.log('   GO');
-      console.log('   ─────────────────────────────────────────────────────');
+      console.log('   ─────────────────────────────────────────────────');
       console.log('');
     } else if (error.message.includes('timeout') || error.message.includes('ETIMEDOUT')) {
       console.log('❌ Connection timeout - server may be unreachable');

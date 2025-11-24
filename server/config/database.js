@@ -23,19 +23,16 @@ if (useWindowsAuth) {
   const driver = process.env.ODBC_DRIVER || 'ODBC Driver 18 for SQL Server';
   
   // Build connection string for msnodesqlv8
-  const connectionString = `Server=${serverName},${port};Database=${process.env.DB_DATABASE};Trusted_Connection=Yes;Driver={${driver}};TrustServerCertificate=yes;`;
+  // CRITICAL: mssql@12.x requires BOTH server property AND connectionString when using ODBC
+  const connectionString = `Driver={${driver}};Server=${serverName};Database=${process.env.DB_DATABASE};Trusted_Connection=Yes;TrustServerCertificate=yes;`;
   
   config = {
-    // CRITICAL: mssql@12.x requires server property even with connectionString
-    server: serverName,
-    database: process.env.DB_DATABASE,
-    driver: 'msnodesqlv8',
+    server: serverName,  // Required by mssql@12.x even with connectionString
     connectionString: connectionString,
     options: {
       trustedConnection: true,
       enableArithAbort: true,
-      trustServerCertificate: true,
-      instanceName: '' // Prevents instance name lookup issues
+      trustServerCertificate: true
     },
     pool: {
       max: 10,
