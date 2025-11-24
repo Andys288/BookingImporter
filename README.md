@@ -4,6 +4,16 @@ A React + Express application for importing booking data from Excel files into S
 
 ## 🚀 Quick Start
 
+### ⚠️ IMPORTANT: Windows Authentication Users
+
+If using Windows Authentication, you **MUST** install the `msnodesqlv8` package:
+
+```bash
+npm install msnodesqlv8
+```
+
+**See [WINDOWS_AUTH_SETUP.md](WINDOWS_AUTH_SETUP.md) for complete setup instructions.**
+
 ### On Your Local Machine:
 
 1. **Clone and install:**
@@ -13,7 +23,17 @@ A React + Express application for importing booking data from Excel files into S
    npm install
    ```
 
-2. **Configure database:**
+2. **For Windows Authentication (REQUIRED):**
+   ```bash
+   npm install msnodesqlv8
+   ```
+   
+   **Prerequisites:**
+   - Visual C++ Redistributable
+   - ODBC Driver 18 for SQL Server
+   - See [WINDOWS_AUTH_SETUP.md](WINDOWS_AUTH_SETUP.md) for details
+
+3. **Configure database:**
    - Copy `.env.example` to `.env`
    - Update with your SQL Server details
    - See [LOCAL_SETUP_GUIDE.md](LOCAL_SETUP_GUIDE.md) for detailed instructions
@@ -35,6 +55,7 @@ A React + Express application for importing booking data from Excel files into S
 
 ## 📚 Documentation
 
+- **[WINDOWS_AUTH_SETUP.md](WINDOWS_AUTH_SETUP.md)** - ⚠️ **REQUIRED** for Windows Authentication setup
 - **[LOCAL_SETUP_GUIDE.md](LOCAL_SETUP_GUIDE.md)** - Complete setup instructions for local development
 - **[SECURITY_FIX_SUMMARY.md](SECURITY_FIX_SUMMARY.md)** - Recent security improvements (xlsx → exceljs)
 - **[STORED_PROCEDURE_ANALYSIS.md](STORED_PROCEDURE_ANALYSIS.md)** - Database stored procedure details
