@@ -4,6 +4,16 @@ This directory contains legacy code, deprecated features, and reference material
 
 ## 📂 Contents
 
+### `my-react-app-old/`
+**Original Project Structure (Pre-Reorganization)**
+
+This folder contains the complete original project structure before the January 2025 reorganization. It was previously the main `my-react-app/` directory.
+
+- **Archived:** January 2025
+- **Status:** Superseded by root-level structure
+- **Purpose:** Reference for project history
+- **Contains:** Complete duplicate of old structure with all documentation
+
 ### `poc-version/`
 **Original Proof of Concept Implementation**
 
@@ -103,7 +113,8 @@ When archiving code:
 
 | Date | Item | Reason | Replaced By |
 |------|------|--------|-------------|
-| Jan 2025 | `my-react-app/` → `poc-version/` | Project restructure | Current `src/` and `server/` |
+| Jan 2025 | `my-react-app/` → `my-react-app-old/` | Duplicate structure cleanup | Root-level `src/`, `server/`, etc. |
+| Jan 2025 | POC files → `poc-version/` | Project restructure | Current implementation |
 | Jan 2025 | `BookingUpdater v502.xla` | Superseded by web app | Current application |
 | Jan 2025 | `Booking Updates example.xlsx` | Old format | New template system |
 | Jan 2025 | `test.html` | Moved to proper tests | `tests/` directory (future) |
